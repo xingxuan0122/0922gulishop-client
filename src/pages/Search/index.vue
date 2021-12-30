@@ -1,10 +1,13 @@
 <template>
-  <h2>search</h2>
+  <div>
+    <TypeNav></TypeNav>
+  </div>
 </template>
 
 <script>
 export default {
   name: "Search",
+  props: ['keyword', 'keyword1'],
   mounted() {
     console.log(this)
   }
