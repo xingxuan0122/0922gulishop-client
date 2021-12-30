@@ -18,20 +18,28 @@ const router = new VueRouter({
       component: home
     },
     {
-      path: '/search',
+      path: '/search/:keyword',
       name: 'search',
       component: search
     },
     {
       path: '/login',
       name: 'login',
-      component: login
+      component: login,
+      // 路由对象中的元配置项，可以配置我们所需要的任何数据
+      meta: {
+        isHidden: true
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: register
+      component: register,
+      meta: {
+        isHidden: true
+      }
     },
+      //重定向
     {
       path: '/',
       redirect: '/home'

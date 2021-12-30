@@ -4,7 +4,10 @@
 
 <script>
 export default {
-  name: "Search"
+  name: "Search",
+  mounted() {
+    console.log(this)
+  }
 }
 </script>
 

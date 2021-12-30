@@ -34,7 +34,12 @@
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge"/>
+          <input
+              type="text"
+              id="autocomplete"
+              class="input-error input-xxlarge"
+              v-model="keyword"
+          />
           <button
               class="sui-btn btn-xlarge btn-danger"
               type="button"
@@ -51,9 +56,36 @@
 <script>
 export default {
   name: "Header",
+  data() {
+    return {
+      keyword: ''
+    }
+  },
   methods: {
     toSearch() {
-      this.$router.push('/search')
+      // this.$router.push('/search/' + this.keyword + '?keyword1=' + this.keyword.toUpperCase())
+
+      // 路由传参种类： params参数和query参数
+      // params参数是属于路径的一部分，路由当中匹配的时候，是要照顾到这个参数的
+      // query参数是在路径后面，以？分隔？后面的 a = b & c = d 就是你的query参数
+      // query参数是不属于路径的一部分，路由匹配的时候，不需要关心我这个参数
+
+      //路由路径带参数的三种写法
+      // 1.字符串写法
+      // this.$router.push('/search/' + this.keyword + '?keyword1=' + this.keyword.toUpperCase())
+      // 2.模板字符串
+      // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
+      // 3.对象写法（重点）
+      this.$router.push({
+        name: 'search',
+        params: {
+          keyword: this.keyword
+        },
+        query: {
+          keyword1: this.keyword.toUpperCase()
+        }
+      })
+
     }
   }
 }
