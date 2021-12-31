@@ -22,7 +22,7 @@ const service = axios.create({
 // 如果以后你想对axios添加额外的功能或者给请求头添加额外的信息
 // 必然用到axios的请求拦截器和响应拦截器
 
-// 请求拦截器
+// 请求拦截器,每个ajax请求都要经过这个拦截器去拦截
 service.interceptors.request.use(
     (config) => {
   // 请求拦截器成功的回调
@@ -61,4 +61,4 @@ service.interceptors.response.use(
 );
 
 
-export default service
+export default service // 把封装好的axios实例，暴露出去，后面去用

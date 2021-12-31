@@ -27,7 +27,10 @@ export default {
     Like,
     Floor,
     Brand
-  }
+  },
+  // mounted() {
+  //   console.log(this)
+  // }
 }
 </script>
 
