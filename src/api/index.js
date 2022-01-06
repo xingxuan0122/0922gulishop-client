@@ -29,8 +29,8 @@ export const reqCategoryList = () => {
   return request({
     url: 'product/getBaseCategoryList',
     method: 'GET',
-    changeOrigin: true, // needed for virtual hosted sites
-    ws: true, // proxy websockets
+  //   changeOrigin: true, // needed for virtual hosted sites
+  //   ws: true, // proxy websockets
   })
 }
 

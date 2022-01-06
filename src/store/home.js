@@ -8,14 +8,14 @@ const state ={
   categoryList: []
 }
 
-const mutation = {
+const mutations = {
   // 直接修改数据
   RECEIVE_CATEGORYLIST(state, categoryList) {
     state.categoryList = categoryList
   }
 }
 
-const action = {
+const actions = {
   // 与组件单中用户对接
   // 一般是异步发请求
   // 提交mutation
@@ -37,7 +37,7 @@ const getters = {
 
 export default {
   state,
-  mutation,
-  action,
+  mutations,
+  actions,
   getters
 }
