@@ -6,6 +6,7 @@
     <Rank></Rank>
     <Like></Like>
     <Floor></Floor>
+    <Floor></Floor>
     <Brand></Brand>
   </div>
 </template>

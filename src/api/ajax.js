@@ -42,7 +42,7 @@ service.interceptors.request.use(
 // 统一处理请求错误，具体请求也可以选择处理或不处理
 service.interceptors.response.use(
     (response) => {
-        // response 其实就是我们的相应报文
+        // response 其实就是我们的响应报文
         // 我们也是可以添加额外功能或者响应报文进行处理
       NProgress.done(); //停止进度条
 

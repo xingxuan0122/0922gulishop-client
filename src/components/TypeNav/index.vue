@@ -2,7 +2,39 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <h2 class="all">全部商品分类</h2>
+      <div @mouseleave="currentIndex = -1">
+        <h2 class="all">全部商品分类</h2>
+        <div class="sort">
+          <div class="all-sort-list2">
+            <div
+                class="item"
+                :class="{item_on: currentIndex === index}"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                @mouseenter="currentIndex = index"
+            >
+              <h3>
+                <a href="">{{ c1.categoryName }}</a>
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl class="fore"  v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
+                    <dt>
+                      <a href="">{{ c2.categoryName }}</a>
+                    </dt>
+                    <dd>
+                      <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
+                        <a href="">{{ c3.categoryName }}</a>
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -13,30 +45,7 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId">
-            <h3>
-              <a href="">{{ c1.categoryName }}</a>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl class="fore"  v-for="(c2, index) in c1.categoryChild" :key="c2.categoryId">
-                  <dt>
-                    <a href="">{{ c2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em v-for="(c3, index) in c2.categoryChild" :key="c3.categoryId">
-                      <a href="">{{ c3.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
 
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -46,12 +55,17 @@ import {mapState} from "vuex";
 
 export default {
   name: "TypeNav",
+  data() {
+    return {
+      currentIndex: -1
+    }
+  },
   // 组件在挂载完成的时候，就立马发送请求获取数据，存储到vuex里面，而不是直接在vue组件
   mounted() {
     // dispatch是分发和触发的意思，和emit单词意思一样
     // 本质其实就是在调用指定的action函数
     this.$store.dispatch('getCategoryList')
-    console.log(this)
+    // console.log(this)
   },
   // 从vuex当中把数据捞到vuex组件当中使用
   // 以后只要是从vuex拿数据，都是在computed当中拿， state和getters当中去拿，
@@ -168,7 +182,7 @@ export default {
 
                 dd {
                   float: left;
-                  width: 415px;
+                  width: 550px;
                   padding: 3px 0 0;
                   overflow: hidden;
 
@@ -185,7 +199,8 @@ export default {
             }
           }
 
-          &:hover {
+          &.item_on {
+            background-color: skyblue;
             .item-list {
               display: block;
             }
