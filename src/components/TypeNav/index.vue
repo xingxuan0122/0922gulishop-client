@@ -11,10 +11,19 @@
                 :class="{item_on: currentIndex === index}"
                 v-for="(c1, index) in categoryList"
                 :key="c1.categoryId"
-                @mouseenter="currentIndex = index"
+                @mouseenter="moveInItem(index)"
             >
               <h3>
-                <a href="">{{ c1.categoryName }}</a>
+<!--                <a href="">{{ c1.categoryName }}</a>-->
+                <router-link
+                    :to="{
+                      name: 'search',
+                      query: {
+                        category1Id: c1.categoryId,
+                        categoryName: c1.categoryName
+                      }
+                    }"
+                >{{ c1.categoryName }}</router-link>
               </h3>
               <div class="item-list clearfix">
                 <div class="subitem">
@@ -52,6 +61,8 @@
 
 <script>
 import {mapState} from "vuex";
+// import _ from 'lodash'; // 这样引入会把整个lodash全部引入，打包后体积较大
+import throttle from 'lodash/throttle'
 
 export default {
   name: "TypeNav",
@@ -66,6 +77,20 @@ export default {
     // 本质其实就是在调用指定的action函数
     this.$store.dispatch('getCategoryList')
     // console.log(this)
+  },
+  methods: {
+    // 没节流
+    // moveInItem(index) {
+    //   this.currentIndex = index
+    //   console.log(index)
+    // }
+
+    // 节流后，传递的函数不能用箭头函数，因为箭头函数内部this不是组件对象
+    moveInItem: throttle(function (index) {
+      this.currentIndex = index
+      // console.log(index)
+    }, 20, { 'trailing': false })
+
   },
   // 从vuex当中把数据捞到vuex组件当中使用
   // 以后只要是从vuex拿数据，都是在computed当中拿， state和getters当中去拿，
