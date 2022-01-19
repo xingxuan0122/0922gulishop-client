@@ -4,18 +4,23 @@
     <div class="container">
       <div @mouseleave="currentIndex = -1">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2">
+        <div class="sort" v-show="isShow">
+          <div class="all-sort-list2" @click="toSearch">
             <div
-                class="item"
-                :class="{item_on: currentIndex === index}"
-                v-for="(c1, index) in categoryList"
-                :key="c1.categoryId"
-                @mouseenter="moveInItem(index)"
+              class="item"
+              :class="{item_on: currentIndex === index}"
+              v-for="(c1, index) in categoryList"
+              :key="c1.categoryId"
+              @mouseenter="moveInItem(index)"
             >
               <h3>
-<!--                <a href="">{{ c1.categoryName }}</a>-->
-                <router-link
+                <a
+                    href="javascript:;"
+                    :data-category1Id="c1.categoryId"
+                    :data-categoryName="c1.categoryName"
+                >{{ c1.categoryName }}</a>
+<!--                第一种写法：所有的a标签换成router-link,会卡，因为组件标签太多了，导致内存当中组件对象很多，所以效率不高-->
+<!--                <router-link
                     :to="{
                       name: 'search',
                       query: {
@@ -23,17 +28,76 @@
                         categoryName: c1.categoryName
                       }
                     }"
-                >{{ c1.categoryName }}</router-link>
+                >{{ c1.categoryName }}
+                </router-link>-->
+                <!--把声明式导航改为编程式导航，click事件，点击之后，是需要调用函数的，同样每个a标签都添加了点击时间，
+                那么内存中就会定义很多个函数，内存占用也是比较大的，效率虽然比声明式导航强，但是还是不够好-->
+<!--                事件委派处理： 找公共的离自己最近的祖先元素，这个祖先元素只有一个-->
+<!--                <a href="javascript:;"-->
+<!--                   @click="$router.push({-->
+<!--                     name: 'search',-->
+<!--                       query: {-->
+<!--                         category1Id: c1.categoryId,-->
+<!--                         categoryName: c1.categoryName-->
+<!--                       }-->
+<!--                   })"-->
+<!--                 >{{ c1.categoryName }}</a>-->
               </h3>
               <div class="item-list clearfix">
                 <div class="subitem">
-                  <dl class="fore"  v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
+                  <dl class="fore" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a
+                          href="javascript:;"
+                          :data-category2Id="c2.categoryId"
+                          :data-categoryName="c2.categoryName"
+                      >{{ c2.categoryName }}</a>
+<!--                      <router-link
+                          :to="{
+                            name: 'search',
+                            query: {
+                              category2Id: c2.categoryId,
+                              categoryName: c2.categoryName
+                            }
+                          }"
+                      >{{ c2.categoryName }}
+                      </router-link>-->
+<!--                      <a href="javascript:;"-->
+<!--                         @click="$router.push({-->
+<!--                           name: 'search',-->
+<!--                             query: {-->
+<!--                               category2Id: c2.categoryId,-->
+<!--                               categoryName: c2.categoryName-->
+<!--                             }-->
+<!--                         })"-->
+<!--                      >{{ c2.categoryName }}</a>-->
                     </dt>
                     <dd>
                       <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
-                        <a href="">{{ c3.categoryName }}</a>
+                        <a
+                            href="javascript:;"
+                            :data-category3Id="c3.categoryId"
+                            :data-categoryName="c3.categoryName"
+                        >{{ c3.categoryName }}</a>
+<!--                        <router-link-->
+<!--                            :to="{-->
+<!--                              name: 'search',-->
+<!--                              query: {-->
+<!--                                category3Id: c3.categoryId,-->
+<!--                                categoryName: c3.categoryName-->
+<!--                              }-->
+<!--                            }"-->
+<!--                        >{{ c3.categoryName }}-->
+<!--                        </router-link>-->
+<!--                        <a href="javascript:;"-->
+<!--                           @click="$router.push({-->
+<!--                             name: 'search',-->
+<!--                               query: {-->
+<!--                                 category3Id: c3.categoryId,-->
+<!--                                 categoryName: c3.categoryName-->
+<!--                               }-->
+<!--                           })"-->
+<!--                        >{{ c3.categoryName }}</a>-->
                       </em>
                     </dd>
                   </dl>
@@ -68,7 +132,8 @@ export default {
   name: "TypeNav",
   data() {
     return {
-      currentIndex: -1
+      currentIndex: -1,
+      isShow: true
     }
   },
   // 组件在挂载完成的时候，就立马发送请求获取数据，存储到vuex里面，而不是直接在vue组件
@@ -77,6 +142,11 @@ export default {
     // 本质其实就是在调用指定的action函数
     this.$store.dispatch('getCategoryList')
     // console.log(this)
+
+    if(this.$route.path !== '/home') {
+      // 证明这个组件是在search里面，需要一上来就隐藏
+      this.isShow = false
+    }
   },
   methods: {
     // 没节流
@@ -89,7 +159,59 @@ export default {
     moveInItem: throttle(function (index) {
       this.currentIndex = index
       // console.log(index)
-    }, 20, { 'trailing': false })
+    }, 20, {'trailing': false}),
+    toSearch(event) {
+      // event是什么，就是浏览器调用函数传递过来的时间对象，代表你传递的$event，只能在模板里面出现
+
+      let targetNode = event.target // 获取我们的目标元素(真正发生事件的元素)
+      // console.log(event)
+      // console.log(targetNode)
+
+      let data = targetNode.dataset // 获取当前目标元素身上data-属性组成的对象
+      // console.log(data)
+      // 怎么知道点击的是不是a标签
+      // 如果是a标签，那么data一定有categoryName的
+      // 如果点的不是a标签，那么data就没有categoryName的
+      // 参数怎么携带，要携带那些个参数
+      // 如果点的是a标签，那么参数已经带过来了，就在我们的data当中
+      let {category1id, category2id, category3id, categoryname} = data
+
+      if(categoryname) {
+        // categoryname存在证明点击的就是a标签
+        let location = {
+          name: 'search'
+        }
+        let query = {
+          categoryName: categoryname
+        }
+        // 确定是一级还是二级还是三级的id
+        if(category1id) {
+          query.category1Id = category1id
+        } else if (category2id) {
+          query.category2Id = category2id
+        } else {
+          query.category3Id = category3id
+        }
+
+        // 找到所有的query参数以后，最后把query放到location里面
+        location.query = query
+        // 最终把location对象就构造好了，跳转
+
+        // 跳转之前，要合并原来过来时候带的params参数
+        // 看看之前过来有没有params参数，有的话这次跳就一起带上
+        if(this.$route.params) {
+          location.params = this.$route.params
+        }
+
+        this.$router.push(location)
+      }
+
+    }
+    // event是事件对象
+    // 每一次触发事件的时候，系统（浏览器内核）都会吧这一次触发事件相关的所有信息，封装为衣蛾对象
+    // 在浏览器调用回调函数的时候，自动传递给回调函数的第一个形参
+
+    // 回调函数： 自己定义的 自己没有调用 最后执行了
 
   },
   // 从vuex当中把数据捞到vuex组件当中使用
@@ -226,6 +348,7 @@ export default {
 
           &.item_on {
             background-color: skyblue;
+
             .item-list {
               display: block;
             }

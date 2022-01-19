@@ -9,7 +9,7 @@ export default {
   name: "Search",
   props: ['keyword', 'keyword1'],
   mounted() {
-    console.log(this)
+    // console.log(this)
   }
 }
 </script>
