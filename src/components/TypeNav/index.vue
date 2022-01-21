@@ -2,111 +2,113 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="currentIndex = -1">
+      <div @mouseleave="moveOutDiv" @mouseenter="isShow = true" >
         <h2 class="all">全部商品分类</h2>
-        <div class="sort" v-show="isShow">
-          <div class="all-sort-list2" @click="toSearch">
-            <div
-              class="item"
-              :class="{item_on: currentIndex === index}"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              @mouseenter="moveInItem(index)"
-            >
-              <h3>
-                <a
-                    href="javascript:;"
-                    :data-category1Id="c1.categoryId"
-                    :data-categoryName="c1.categoryName"
-                >{{ c1.categoryName }}</a>
-<!--                第一种写法：所有的a标签换成router-link,会卡，因为组件标签太多了，导致内存当中组件对象很多，所以效率不高-->
-<!--                <router-link
-                    :to="{
-                      name: 'search',
-                      query: {
-                        category1Id: c1.categoryId,
-                        categoryName: c1.categoryName
-                      }
-                    }"
-                >{{ c1.categoryName }}
-                </router-link>-->
-                <!--把声明式导航改为编程式导航，click事件，点击之后，是需要调用函数的，同样每个a标签都添加了点击时间，
-                那么内存中就会定义很多个函数，内存占用也是比较大的，效率虽然比声明式导航强，但是还是不够好-->
-<!--                事件委派处理： 找公共的离自己最近的祖先元素，这个祖先元素只有一个-->
-<!--                <a href="javascript:;"-->
-<!--                   @click="$router.push({-->
-<!--                     name: 'search',-->
-<!--                       query: {-->
-<!--                         category1Id: c1.categoryId,-->
-<!--                         categoryName: c1.categoryName-->
-<!--                       }-->
-<!--                   })"-->
-<!--                 >{{ c1.categoryName }}</a>-->
-              </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl class="fore" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
-                    <dt>
-                      <a
-                          href="javascript:;"
-                          :data-category2Id="c2.categoryId"
-                          :data-categoryName="c2.categoryName"
-                      >{{ c2.categoryName }}</a>
-<!--                      <router-link
-                          :to="{
-                            name: 'search',
-                            query: {
-                              category2Id: c2.categoryId,
-                              categoryName: c2.categoryName
-                            }
-                          }"
-                      >{{ c2.categoryName }}
-                      </router-link>-->
-<!--                      <a href="javascript:;"-->
-<!--                         @click="$router.push({-->
-<!--                           name: 'search',-->
-<!--                             query: {-->
-<!--                               category2Id: c2.categoryId,-->
-<!--                               categoryName: c2.categoryName-->
-<!--                             }-->
-<!--                         })"-->
-<!--                      >{{ c2.categoryName }}</a>-->
-                    </dt>
-                    <dd>
-                      <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
+        <transition name="sort">
+          <div class="sort" v-show="isShow">
+            <div class="all-sort-list2" @click="toSearch">
+              <div
+                  class="item"
+                  :class="{item_on: currentIndex === index}"
+                  v-for="(c1, index) in categoryList"
+                  :key="c1.categoryId"
+                  @mouseenter="moveInItem(index)"
+              >
+                <h3>
+                  <a
+                      href="javascript:;"
+                      :data-category1Id="c1.categoryId"
+                      :data-categoryName="c1.categoryName"
+                  >{{ c1.categoryName }}</a>
+                  <!--                第一种写法：所有的a标签换成router-link,会卡，因为组件标签太多了，导致内存当中组件对象很多，所以效率不高-->
+                  <!--                <router-link
+                                      :to="{
+                                        name: 'search',
+                                        query: {
+                                          category1Id: c1.categoryId,
+                                          categoryName: c1.categoryName
+                                        }
+                                      }"
+                                  >{{ c1.categoryName }}
+                                  </router-link>-->
+                  <!--把声明式导航改为编程式导航，click事件，点击之后，是需要调用函数的，同样每个a标签都添加了点击时间，
+                  那么内存中就会定义很多个函数，内存占用也是比较大的，效率虽然比声明式导航强，但是还是不够好-->
+                  <!--                事件委派处理： 找公共的离自己最近的祖先元素，这个祖先元素只有一个-->
+                  <!--                <a href="javascript:;"-->
+                  <!--                   @click="$router.push({-->
+                  <!--                     name: 'search',-->
+                  <!--                       query: {-->
+                  <!--                         category1Id: c1.categoryId,-->
+                  <!--                         categoryName: c1.categoryName-->
+                  <!--                       }-->
+                  <!--                   })"-->
+                  <!--                 >{{ c1.categoryName }}</a>-->
+                </h3>
+                <div class="item-list clearfix">
+                  <div class="subitem">
+                    <dl class="fore" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
+                      <dt>
                         <a
                             href="javascript:;"
-                            :data-category3Id="c3.categoryId"
-                            :data-categoryName="c3.categoryName"
-                        >{{ c3.categoryName }}</a>
-<!--                        <router-link-->
-<!--                            :to="{-->
-<!--                              name: 'search',-->
-<!--                              query: {-->
-<!--                                category3Id: c3.categoryId,-->
-<!--                                categoryName: c3.categoryName-->
-<!--                              }-->
-<!--                            }"-->
-<!--                        >{{ c3.categoryName }}-->
-<!--                        </router-link>-->
-<!--                        <a href="javascript:;"-->
-<!--                           @click="$router.push({-->
-<!--                             name: 'search',-->
-<!--                               query: {-->
-<!--                                 category3Id: c3.categoryId,-->
-<!--                                 categoryName: c3.categoryName-->
-<!--                               }-->
-<!--                           })"-->
-<!--                        >{{ c3.categoryName }}</a>-->
-                      </em>
-                    </dd>
-                  </dl>
+                            :data-category2Id="c2.categoryId"
+                            :data-categoryName="c2.categoryName"
+                        >{{ c2.categoryName }}</a>
+                        <!--                      <router-link
+                                                  :to="{
+                                                    name: 'search',
+                                                    query: {
+                                                      category2Id: c2.categoryId,
+                                                      categoryName: c2.categoryName
+                                                    }
+                                                  }"
+                                              >{{ c2.categoryName }}
+                                              </router-link>-->
+                        <!--                      <a href="javascript:;"-->
+                        <!--                         @click="$router.push({-->
+                        <!--                           name: 'search',-->
+                        <!--                             query: {-->
+                        <!--                               category2Id: c2.categoryId,-->
+                        <!--                               categoryName: c2.categoryName-->
+                        <!--                             }-->
+                        <!--                         })"-->
+                        <!--                      >{{ c2.categoryName }}</a>-->
+                      </dt>
+                      <dd>
+                        <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
+                          <a
+                              href="javascript:;"
+                              :data-category3Id="c3.categoryId"
+                              :data-categoryName="c3.categoryName"
+                          >{{ c3.categoryName }}</a>
+                          <!--                        <router-link-->
+                          <!--                            :to="{-->
+                          <!--                              name: 'search',-->
+                          <!--                              query: {-->
+                          <!--                                category3Id: c3.categoryId,-->
+                          <!--                                categoryName: c3.categoryName-->
+                          <!--                              }-->
+                          <!--                            }"-->
+                          <!--                        >{{ c3.categoryName }}-->
+                          <!--                        </router-link>-->
+                          <!--                        <a href="javascript:;"-->
+                          <!--                           @click="$router.push({-->
+                          <!--                             name: 'search',-->
+                          <!--                               query: {-->
+                          <!--                                 category3Id: c3.categoryId,-->
+                          <!--                                 categoryName: c3.categoryName-->
+                          <!--                               }-->
+                          <!--                           })"-->
+                          <!--                        >{{ c3.categoryName }}</a>-->
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -140,7 +142,12 @@ export default {
   mounted() {
     // dispatch是分发和触发的意思，和emit单词意思一样
     // 本质其实就是在调用指定的action函数
-    this.$store.dispatch('getCategoryList')
+
+    // 如果发请求在这发，只要home和search切换，每一次都要发请求
+    // home和search内部都需要重新创建typeNav组件，mounted就会重新执行
+    // 请求就会重新发，而三级分类列表数据是一样的，没必要发那么多次
+
+    // this.$store.dispatch('getCategoryList')
     // console.log(this)
 
     if(this.$route.path !== '/home') {
@@ -206,6 +213,16 @@ export default {
         this.$router.push(location)
       }
 
+    },
+
+    moveOutDiv() {
+      this.currentIndex = -1
+      // if(this.$route.path === '/home') this.isShow = true
+      // 移出外部咱们自己添加的div，得去判断是在home页面移出还是在search页面移出
+      if(this.$route.path !== '/home') {
+        // 证明这个组件是在search里面，需要让sort隐藏
+        this.isShow = false
+      }
     }
     // event是事件对象
     // 每一次触发事件的时候，系统（浏览器内核）都会吧这一次触发事件相关的所有信息，封装为衣蛾对象
@@ -226,7 +243,7 @@ export default {
     //不能这么干，因为categoryList,不是state.categoryList,而是state.home.categoryList
     ...mapState({
       // 必须使用对象，而且返回的是state.home.categoryList
-      categoryList: state => state.home.categoryList
+      categoryList: state => state.home.categoryList,
     })
 
 
@@ -276,6 +293,18 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
+
+      &.sort-enter{
+        height: 0;
+        opacity: 0
+      }
+      &.sort-enter-to{
+        height: 461px;
+        opacity: 1;
+      }
+      &.sort-enter-active{
+        transition: all .5s;
+      }
 
       .all-sort-list2 {
         .item {

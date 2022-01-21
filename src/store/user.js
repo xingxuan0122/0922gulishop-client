@@ -3,7 +3,7 @@
 // vuex当中的4个核心概念
 const state ={
   //存数据
-  foo: 114
+  foo: 114514
 }
 
 const mutations = {

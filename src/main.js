@@ -3,6 +3,9 @@ import App from './App'
 import router from '@/router'
 import store from '@/store'
 
+import 'swiper/css/swiper.css' // 引入swiper的css， 一般是直接在main里面引入
+
+import '@/mock/mockServer' // 引入mockServer, 让模拟的接口生效
 
 
 import TypeNav from '@/components/TypeNav'
