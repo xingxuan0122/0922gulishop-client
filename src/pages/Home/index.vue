@@ -6,7 +6,6 @@
     <Rank></Rank>
     <Like></Like>
     <Floor v-for="(floor, index) in floorList" :key="floor.id" :floor="floor"></Floor>
-
     <Brand></Brand>
   </div>
 </template>
