@@ -7,6 +7,7 @@ import 'swiper/css/swiper.css' // 引入swiper的css， 一般是直接在main�
 
 import '@/mock/mockServer' // 引入mockServer, 让模拟的接口生效
 
+// import '@/api'
 
 import TypeNav from '@/components/TypeNav'
 import SlideLoop from '@/components/SlideLoop'

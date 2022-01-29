@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import user from "./user";
 import home from "./home";
+import search from "./search";
 
 Vue.use(Vuex)
 
@@ -34,7 +35,8 @@ const store = new Vuex.Store({
   // modules 代表模块化
   modules: {
     user,
-    home
+    home,
+    search
   }
 })
 
