@@ -11,10 +11,12 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName }}<i @click="removeCategoryName">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
+            </li>
           </ul>
         </div>
 
@@ -141,7 +143,15 @@
         }
       }
     },
+    // 按照三级分类和关键字进行搜索
+    beforeMount() {
+      // 在点击三级分类或者点击搜索按钮跳过来发请求之前，把对应的三级分类名称和id或者关键字keyword,
+      // 添加到data当中searchParams对应的搜索项当中
+      // 浅拷贝
+      this.hanlderSearchParams()
+    },
     mounted() {
+      // 点击跳转过来，是在这里发请求的
       this.getSearchInfo()
     },
     methods: {
@@ -154,10 +164,46 @@
         // 点击搜索按钮跳转那么搜索条件就应该是自己输入的关键字
         // 所以这个请求，参数不应该是空对象
         this.$store.dispatch('getSearchInfo',this.searchParams)
+      },
+      hanlderSearchParams() {
+        let {category1Id, category2Id, category3Id, categoryName} = this.$route.query
+        let {keyword} = this.$route.params
+        let searchParams = {
+          ...this.searchParams,
+          category1Id,
+          category2Id,
+          category3Id,
+          categoryName,
+          keyword
+        } // 这样可以保证 searchParams：里面一定包含了我点击传递过来的搜索条件，没有就是undefined
+
+        this.searchParams = searchParams
+      },
+      // 删除分类名称搜索条件，重新发送请求
+      removeCategoryName() {
+        this.searchParams.category1Id = undefined
+        this.searchParams.category2Id = undefined
+        this.searchParams.category3Id = undefined
+        this.searchParams.categoryName = undefined
+        this.getSearchInfo()
+      },
+      // 删除关键字搜索条件，重新发送请求
+      removeKeyword() {
+        this.searchParams.category1Id = undefined
+        this.searchParams.category2Id = undefined
+        this.searchParams.category3Id = undefined
+        this.searchParams.keyword = undefined
+        this.getSearchInfo()
       }
     },
     computed: {
       ...mapGetters(['goodsList'])
+    },
+    watch: {
+      $route(newVal, oldVal) {
+        this.hanlderSearchParams()
+        this.getSearchInfo()
+      }
     }
   }
 </script>
